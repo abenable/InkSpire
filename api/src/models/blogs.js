@@ -1,0 +1,43 @@
+import mongoose from 'mongoose';
+
+const blogSchema = new mongoose.Schema({
+  title: { type: String, required: true, unique: true },
+  content: {
+    type: String,
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true,
+    default: 'Lifestyle',
+  },
+  rating: {
+    type: Number,
+    max: 5,
+    default: 0,
+  },
+
+  CreatedAt: { type: Date },
+  author: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'users',
+    default: '648f530a37aab1e9dade84bd',
+  },
+});
+
+blogSchema.pre('save', async function (next) {
+  if (!this.isNew) return next();
+  this.CreatedAt = Date.now();
+  next();
+});
+
+blogSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'author',
+    select: 'email',
+  }).select('-__v');
+
+  next();
+});
+
+export const BlogModel = mongoose.model('blogs', blogSchema);

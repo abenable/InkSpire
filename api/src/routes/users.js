@@ -82,20 +82,30 @@ router.post('/admin/register', async (req, res, next) => {
 
 router.post('/login', async (req, res, next) => {
   try {
+    console.log(req.body);
     const { email, password } = req.body;
     //Check if user with this email exists....
     const user = await UserModel.findOne({ email }).select('+password');
     if (!user) {
-      return next(new ApiError(401, 'User doesnt exist........'));
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Invalid credentials',
+      });
+      // return next(new ApiError(401, 'User doesnt exist........'));
     }
     //Sign the jwt token for the user..
     const token = signToken(user._id);
 
     //Check if the password entered is correct....
     if (!(await user.correctPassword(password, user.password))) {
-      return next(
-        new ApiError(401, 'Incorrect password. Check it and try again.')
-      );
+      return res.status(200).json({
+        status: 'failed',
+        message: 'Invalid credentials',
+      });
+
+      // return next(
+      //   new ApiError(401, 'Incorrect password. Check it and try again.')
+      // );
     }
 
     //All correct

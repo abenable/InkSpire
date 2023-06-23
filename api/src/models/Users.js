@@ -2,30 +2,30 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
-const UsersSchema = new mongoose.Schema({
-  username: { type: String },
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
-  accountCreatedAt: { type: Date },
   password: { type: String, required: true, select: false },
+  accountCreatedAt: { type: Date },
   passChangedAt: { type: Date, select: false },
-  passresettoken: { type: String },
+  passresettoken: { type: String, select: false },
 });
 
-UsersSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   this.passChangedAt = Date.now();
   next();
 });
 
-UsersSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
   if (!this.isNew) return next();
   this.accountCreatedAt = Date.now();
   next();
 });
 
-UsersSchema.methods.changedPassAfter = function (jwtTimestamp) {
+userSchema.methods.changedPassAfter = function (jwtTimestamp) {
   if (this.passChangedAt) {
     const changedTimestamp = parseInt(this.passChangedAt.getTime() / 1000, 10);
     return jwtTimestamp < changedTimestamp;
@@ -33,11 +33,11 @@ UsersSchema.methods.changedPassAfter = function (jwtTimestamp) {
   return false;
 };
 
-UsersSchema.methods.correctPassword = async function (password, savedPassword) {
+userSchema.methods.correctPassword = async function (password, savedPassword) {
   return await bcrypt.compare(password, savedPassword);
 };
 
-UsersSchema.methods.createpassresetToken = function () {
+userSchema.methods.createpassresetToken = function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
   this.passresettoken = crypto
     .createHash('sha256')
@@ -46,4 +46,4 @@ UsersSchema.methods.createpassresetToken = function () {
   return resetToken;
 };
 
-export const UserModel = mongoose.model('users', UsersSchema);
+export const UserModel = mongoose.model('users', userSchema);
