@@ -27,7 +27,7 @@ router.post('/add', protect, async (req, res, next) => {
 router.get('/all', async (req, res, next) => {
   try {
     const blogs = await BlogModel.find();
-    res.status(201).render('all_blogs', {
+    res.status(201).render('blogs', {
       title: 'All blogs',
       blogs,
     });

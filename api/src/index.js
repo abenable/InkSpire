@@ -41,13 +41,12 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
 
-app.get('/', (req, res) => {
-  res.status(200).render('base');
-});
-
 // 2) ROUTES
 app.use('/auth', userRouter);
 app.use('/blog', blogRouter);
+app.get('/', (req, res) => {
+  res.status(200).render('homepage');
+});
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
