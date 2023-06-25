@@ -26,8 +26,18 @@ router.post('/add', protect, async (req, res, next) => {
 });
 router.get('/all', protect, async (req, res, next) => {
   try {
-    console.log('GET request received for all posts.');
     const blogs = await BlogModel.find();
+    res.status(200).json({ blogs });
+  } catch (error) {
+    console.error(error);
+    next(new ApiError(500, 'internal server error'));
+  }
+});
+router.get('/search', async (req, res, next) => {
+  try {
+    const blogs = await BlogModel.find({
+      $text: { $search: req.body.keyword },
+    });
     res.status(200).json({ blogs });
   } catch (error) {
     console.error(error);

@@ -30,6 +30,7 @@ blogSchema.pre('save', async function (next) {
   this.CreatedAt = Date.now();
   next();
 });
+blogSchema.index({ '$**': 'text' });
 
 blogSchema.pre(/^find/, function (next) {
   this.populate({
