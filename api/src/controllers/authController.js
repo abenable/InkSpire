@@ -1,14 +1,10 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { promisify } from 'util';
 import { UserModel } from '../models/Users.js';
 import { ApiError } from './errorController.js';
 import { sendMail } from '../utils/email.js';
-
-export const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_PRIVATE_KEY);
-};
+import { signToken } from '../utils/util.js';
 
 export const protect = async (req, res, next) => {
   try {
@@ -143,5 +139,113 @@ export const updatepassword = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     next(new ApiError(500, 'There was no error'));
+  }
+};
+
+export const Register = async (req, res, next) => {
+  try {
+    const { username, email, role, password } = req.body;
+
+    const checkemail = await UserModel.findOne({ email });
+    if (checkemail) {
+      return next(
+        new ApiError(401, 'Email already taken. Use a different one.')
+      );
+    }
+    const newUser = new UserModel({
+      username,
+      email,
+      role,
+      password,
+    });
+    await newUser.save();
+
+    const token = signToken(newUser._id);
+    res.status(201).json({
+      status: 'success',
+      message: 'User registered successfully.',
+      User: newUser,
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    next(new ApiError(500, 'internal server error'));
+  }
+};
+
+export const AdminRegister = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const checkemail = await UserModel.findOne({ email });
+    if (checkemail) {
+      return next(
+        new ApiError(401, 'Email already taken. Use a different one.')
+      );
+    }
+    const newUser = new UserModel({
+      email,
+      role: 'admin',
+      password,
+    });
+    await newUser.save();
+
+    const token = signToken(newUser._id);
+
+    res.cookie(user._id);
+    res.status(201).json({
+      status: 'success',
+      message: 'User registered successfully.',
+      User: newUser,
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    next(new ApiError(500, 'internal server error'));
+  }
+};
+
+export const Login = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { email, password } = req.body;
+    //Check if user with this email exists....
+    const user = await UserModel.findOne({ email }).select('+password');
+    if (!user) {
+      return next(new ApiError(401, 'User doesnt exist........'));
+    }
+
+    //Check if the password entered is correct....
+    if (!(await user.correctPassword(password, user.password))) {
+      return next(
+        new ApiError(401, 'Invalid credentials. Check them and try again.')
+      );
+    }
+    //Sign the jwt token for the user..
+    const access_token = signToken(user._id);
+    res.status(200).json({
+      status: 'success',
+      message: user.username
+        ? `Logged in as ${user.username}`
+        : 'Logged in as admin',
+      User: {
+        id: user.id,
+        name: user.username,
+        email: user.email,
+        image: user.image,
+        access_token,
+      },
+    });
+    console.log({
+      User: {
+        id: user.id,
+        name: user.username,
+        email: user.email,
+        image: user.image,
+        access_token,
+      },
+    });
+  } catch (error) {
+    return next(new ApiError(500, 'There was no error'));
   }
 };

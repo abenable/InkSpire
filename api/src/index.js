@@ -12,9 +12,9 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
 
-import { userRouter } from './routes/users.js';
-import { ErrorHandler } from './controllers/errorController.js';
+import { ApiError, ErrorHandler } from './controllers/errorController.js';
 import { blogRouter } from './routes/blogs.js';
+import { userRouter } from './routes/authRoutes.js';
 import { getDirname, limiter } from './utils/util.js';
 
 const port = process.env.PORT;
@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
   res.status(200).render('homepage');
 });
 app.all('*', (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+  next(new ApiError(404, `Can't find ${req.originalUrl} on this server!`));
 });
 
 app.use(ErrorHandler);

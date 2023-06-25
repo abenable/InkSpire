@@ -24,13 +24,11 @@ router.post('/add', protect, async (req, res, next) => {
     next(new ApiError(500, 'internal server error'));
   }
 });
-router.get('/all', async (req, res, next) => {
+router.get('/all', protect, async (req, res, next) => {
   try {
+    console.log('GET request received for all posts.');
     const blogs = await BlogModel.find();
-    res.status(201).render('blogs', {
-      title: 'All blogs',
-      blogs,
-    });
+    res.status(200).json({ blogs });
   } catch (error) {
     console.error(error);
     next(new ApiError(500, 'internal server error'));
