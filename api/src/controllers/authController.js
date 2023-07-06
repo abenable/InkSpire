@@ -228,24 +228,10 @@ export const Login = async (req, res, next) => {
       message: user.username
         ? `Logged in as ${user.username}`
         : 'Logged in as admin',
-      User: {
-        id: user.id,
-        name: user.username,
-        email: user.email,
-        image: user.image,
-        access_token,
-      },
-    });
-    console.log({
-      User: {
-        id: user.id,
-        name: user.username,
-        email: user.email,
-        image: user.image,
-        access_token,
-      },
+      access_token,
+      user,
     });
   } catch (error) {
-    return next(new ApiError(500, 'There was no error'));
+    return next(new ApiError(500, 'There was an error'));
   }
 };

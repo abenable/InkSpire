@@ -41,4 +41,4 @@ router.post('/users', async (req, res) => {
   res.json(users);
 });
 
-export { router as userRouter };
+export { router as authRouter };

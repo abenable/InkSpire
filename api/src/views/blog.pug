@@ -1,0 +1,12 @@
+extends base
+
+block content 
+    div.main
+        div.note 
+            span.tag Artificial Intelligence
+        div.title-img
+            h2= blog.title
+            img(src={blog.image}, alt="img-placeholder")
+        div.content
+            p= blog.content
+        

@@ -13,9 +13,10 @@ import xss from 'xss-clean';
 import hpp from 'hpp';
 
 import { ApiError, ErrorHandler } from './controllers/errorController.js';
-import { blogRouter } from './routes/blogs.js';
-import { userRouter } from './routes/authRoutes.js';
+import { blogRouter } from './routes/blogRoutes.js';
+import { authRouter } from './routes/authRoutes.js';
 import { getDirname, limiter } from './utils/util.js';
+import { viewRouter } from './routes/viewRoutes.js';
 
 const port = process.env.PORT;
 const uri = process.env.URI;
@@ -35,18 +36,16 @@ app.options('*', cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use('/', limiter);
 app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
 
 // 2) ROUTES
-app.use('/auth', userRouter);
+app.use('/', viewRouter);
+app.use('/auth', authRouter);
 app.use('/blog', blogRouter);
-app.get('/', (req, res) => {
-  res.status(200).render('homepage');
-});
 app.all('*', (req, res, next) => {
   next(new ApiError(404, `Can't find ${req.originalUrl} on this server!`));
 });

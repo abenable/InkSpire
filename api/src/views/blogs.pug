@@ -2,11 +2,4 @@ extends base
 
 block content
     each blog in blogs 
-        div.card
-            div.header
-            div.info
-                p.title= blog.title 
-                p= blog.content 
-            div.footer
-                p.tag= blog.author.email
-                button.action Get started
+        h3= blog.title

@@ -1,0 +1,9 @@
+extends base
+
+block content 
+    form.form(method="post")
+        label(for="email") Email
+        input#email(type="email", name="email" placeholder='Email' required)
+        label(for="password") Password
+        input#password(type="password", name="password" placeholder="Password" required)
+        button(type="submit") Login 
