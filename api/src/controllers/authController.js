@@ -14,7 +14,10 @@ export const protect = async (req, res, next) => {
       req.headers.authorization.startsWith('Bearer')
     ) {
       token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies) {
+      token = req.cookies.jwt;
     }
+
     if (!token) {
       return next(
         new ApiError(
@@ -130,7 +133,10 @@ export const updatepassword = async (req, res, next) => {
     user.password = newpassword;
     await user.save();
 
-    const token = signToken(user._id);
+    const access_token = signToken(user._id);
+    res.cookie('jwt', access_token, {
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    });
 
     res.status(200).json({
       message: 'Password successfully updated.',
@@ -160,12 +166,15 @@ export const Register = async (req, res, next) => {
     });
     await newUser.save();
 
-    const token = signToken(newUser._id);
+    const access_token = signToken(newUser._id);
+    res.cookie('jwt', access_token, {
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    });
     res.status(201).json({
       status: 'success',
       message: 'User registered successfully.',
       User: newUser,
-      token,
+      access_token,
     });
   } catch (error) {
     console.error(error);
@@ -190,14 +199,17 @@ export const AdminRegister = async (req, res, next) => {
     });
     await newUser.save();
 
-    const token = signToken(newUser._id);
+    const access_token = signToken(newUser._id);
 
-    res.cookie(user._id);
+    res.cookie('jwt', access_token, {
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    });
+
     res.status(201).json({
       status: 'success',
       message: 'User registered successfully.',
       User: newUser,
-      token,
+      access_token,
     });
   } catch (error) {
     console.error(error);
@@ -223,6 +235,10 @@ export const Login = async (req, res, next) => {
     }
     //Sign the jwt token for the user..
     const access_token = signToken(user._id);
+    res.cookie('jwt', access_token, {
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    });
+
     res.status(200).json({
       status: 'success',
       message: user.username

@@ -7,8 +7,16 @@ const login = async (email, password) => {
       data: { email, password },
     });
     console.log(res.data);
+    alert(res.data.message);
+    window.setTimeout(() => {
+      location.assign('/');
+    }, 800);
   } catch (error) {
-    console.log(error);
+    console.log(error.response.data);
+    alert(error.response.data.error_message);
+    window.setTimeout(() => {
+      location.assign('/login');
+    }, 500);
   }
 };
 

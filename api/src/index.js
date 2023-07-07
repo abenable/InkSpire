@@ -6,6 +6,7 @@ dotenv.config();
 import cors from 'cors';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
@@ -36,6 +37,7 @@ app.options('*', cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use('/', limiter);
 app.use(mongoSanitize());
@@ -43,9 +45,9 @@ app.use(xss());
 app.use(hpp());
 
 // 2) ROUTES
-app.use('/', viewRouter);
 app.use('/auth', authRouter);
 app.use('/blog', blogRouter);
+app.use('/', viewRouter);
 app.all('*', (req, res, next) => {
   next(new ApiError(404, `Can't find ${req.originalUrl} on this server!`));
 });
