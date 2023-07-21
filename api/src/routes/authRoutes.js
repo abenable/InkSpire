@@ -1,5 +1,4 @@
 import express from 'express';
-import { UserModel } from '../models/Users.js';
 import {
   AdminRegister,
   Login,
@@ -10,6 +9,7 @@ import {
   restrictTo,
   updatepassword,
 } from '../controllers/authController.js';
+import { UserModel } from '../models/users.js';
 
 const router = express.Router();
 

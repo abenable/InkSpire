@@ -1,3 +1,7 @@
+body {
+  padding: 0 20pt;
+}
+
 .header {
   display: flex;
   background-clip: border-box;
@@ -28,9 +32,13 @@ li {
 }
 
 .footer {
+  position: absolute;
+  width: 95%;
+  bottom: 2px;
   display: flex;
-  margin: 0 20px 8px 20px;
+  padding-bottom: 10px;
   justify-content: space-between;
+  align-items: center;
 }
 
 .social-link-icon {
@@ -39,6 +47,8 @@ li {
 }
 
 .social-grid {
+  justify-content: center;
+  align-items: center;
   display: -ms-grid;
   display: grid;
   margin-bottom: -2px;
@@ -50,4 +60,10 @@ li {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   -ms-grid-rows: auto;
   grid-template-rows: auto;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

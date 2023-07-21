@@ -38,7 +38,7 @@ app.options('*', cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet());
 app.use('/', limiter);
 app.use(mongoSanitize());
 app.use(xss());
@@ -47,9 +47,14 @@ app.use(hpp());
 // 2) ROUTES
 app.use('/auth', authRouter);
 app.use('/blog', blogRouter);
-app.use('/', viewRouter);
+app.use('/view', viewRouter);
+app.use('/', (req, res, next) => {
+  res.status(200).render('homepage', { title: 'Home' });
+});
 app.all('*', (req, res, next) => {
-  next(new ApiError(404, `Can't find ${req.originalUrl} on this server!`));
+  next(
+    new ApiError(404, `Oooops!! Can't find ${req.originalUrl} on this server!`)
+  );
 });
 
 app.use(ErrorHandler);

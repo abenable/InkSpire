@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { promisify } from 'util';
-import { UserModel } from '../models/Users.js';
+import { UserModel } from '../models/users.js';
 import { ApiError } from './errorController.js';
 import { sendMail } from '../utils/email.js';
 import { signToken } from '../utils/util.js';
@@ -235,6 +235,7 @@ export const Login = async (req, res, next) => {
     }
     //Sign the jwt token for the user..
     const access_token = signToken(user._id);
+
     res.cookie('jwt', access_token, {
       expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
     });
