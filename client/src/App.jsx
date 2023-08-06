@@ -1,9 +1,12 @@
 import './App.css';
+import Home from './pages/homepage/home';
 
 function App() {
   return (
     <>
-      <h1>Inkspire</h1>
+      <div className='App'>
+        <Home />
+      </div>
     </>
   );
 }

@@ -24,6 +24,7 @@ router.post('/add', protect, async (req, res, next) => {
     next(new ApiError(500, 'internal server error'));
   }
 });
+
 router.get('/all', protect, async (req, res, next) => {
   try {
     const blogs = await BlogModel.find();
@@ -33,6 +34,7 @@ router.get('/all', protect, async (req, res, next) => {
     next(new ApiError(500, 'internal server error'));
   }
 });
+
 router.get('/search', async (req, res, next) => {
   try {
     const blogs = await BlogModel.find({
@@ -44,6 +46,7 @@ router.get('/search', async (req, res, next) => {
     next(new ApiError(500, 'internal server error'));
   }
 });
+
 router.delete('/delete', protect, async (req, res, next) => {
   try {
     const blog = await BlogModel.findById(req.params.id);

@@ -17,7 +17,7 @@ router.post('/register', Register);
 router.post('/admin/register', AdminRegister);
 router.post('/login', Login);
 router.post('/forgotpassword', forgotpassword);
-router.post('/updatepassword', protect, updatepassword);
+router.post('/updatepassword', updatepassword);
 router.patch('/resetpassword/:token', resetpassword);
 
 router.get('/users', protect, restrictTo('admin'), async (req, res) => {

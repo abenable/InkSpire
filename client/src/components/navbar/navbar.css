@@ -1,0 +1,28 @@
+nav {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  display: flex;
+  width: 40%;
+}
+.navbar {
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  margin-left: 20px;
+  justify-content: space-around;
+}
+li {
+  padding: 0 15px;
+  text-align: center;
+  font-size: 25px;
+}
