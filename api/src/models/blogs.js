@@ -17,12 +17,15 @@ const blogSchema = new mongoose.Schema({
     default: 0,
   },
 
-  CreatedAt: { type: Date },
+  CreatedAt: { type: Date, default: Date.now },
   author: {
-    type: mongoose.SchemaTypes.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: 'users',
-    default: '648f530a37aab1e9dade84bd',
   },
+  recommendedByEditor: { type: Boolean, default: false },
+  likes: { type: Number, default: 0 },
+  reviews: { type: Number, default: 0 },
+  reads: { type: Number, default: 0 },
 });
 
 blogSchema.pre('save', async function (next) {
@@ -35,9 +38,8 @@ blogSchema.index({ '$**': 'text' });
 blogSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'author',
-    select: 'email',
-  }).select('-__v');
-
+    select: '-__v -accountCreatedAt',
+  });
   next();
 });
 

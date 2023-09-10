@@ -1,22 +1,23 @@
 import Button from '../button/button';
-import './navbar.css';
+import './navbar.scss';
 
 const Navbar = () => {
   return (
     <>
-      <nav>
+      <div className='nav'>
         <div className='logo'>
           <h1>InkSpire</h1>
         </div>
         <div className='navbar'>
-          <ul>
+          <div className='navigation'>
             <li>Trending</li>
             <li>Categories</li>
             <li>about</li>
-          </ul>
           <Button btn={'Join'} />
+          </div>
+          <div className="search">search</div>
         </div>
-      </nav>
+      </div>
     </>
   );
 };

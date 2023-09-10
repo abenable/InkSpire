@@ -1,5 +1,5 @@
 import Navbar from '../../components/navbar/navbar';
-import './home.css';
+import './home.scss';
 
 const Home = () => {
   return (
@@ -7,10 +7,6 @@ const Home = () => {
       <div className='header'>
         <div>
           <Navbar />
-        </div>
-        <div>
-          <div>logo</div>
-          <div>search</div>
         </div>
       </div>
       <div className='main'>

@@ -4,12 +4,10 @@ import {
   Login,
   Register,
   forgotpassword,
-  protect,
   resetpassword,
-  restrictTo,
   updatepassword,
 } from '../controllers/authController.js';
-import { UserModel } from '../models/users.js';
+import { ApiError } from '../controllers/errorController.js';
 
 const router = express.Router();
 
@@ -18,27 +16,12 @@ router.post('/admin/register', AdminRegister);
 router.post('/login', Login);
 router.post('/forgotpassword', forgotpassword);
 router.post('/updatepassword', updatepassword);
-router.patch('/resetpassword/:token', resetpassword);
+router.patch('/resetpassword', resetpassword);
 
-router.get('/users', protect, restrictTo('admin'), async (req, res) => {
-  const users = await UserModel.find();
-  res.json(users);
-});
-
-router.delete('/users', protect, restrictTo('admin'), async (req, res) => {
-  const users = await UserModel.deleteMany({ role: 'user' });
-  res.json(users);
-});
-
-router.delete('/user/:id', protect, restrictTo('admin'), async (req, res) => {
-  const userId = req.params.id;
-  const user = await UserModel.deleteOne({ _id: userId });
-  res.json(user);
-});
-
-router.post('/users', async (req, res) => {
-  const users = await UserModel.create(req.body);
-  res.json(users);
+router.all('*', (req, res, next) => {
+  next(
+    new ApiError(404, `Oooops!! Can't find ${req.originalUrl} on this server!`)
+  );
 });
 
 export { router as authRouter };
