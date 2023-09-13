@@ -23,27 +23,24 @@ const Home = () => {
     };
     fetchData();
   }, []);
-
-  console.log(trending);
-  console.log(recommended);
-  console.log(top);
   return (
     <div>
-      {recommended && (
+      {
         <div>
           {/* Render Recommended Post */}
           <h2>Recommended Post</h2>
           <h3>{recommended.title}</h3>
-          <p>{recommended.content}</p>
+          <p>{recommended.body}</p>
         </div>
-      )}
+      }
 
-      <div>
+      <div className='container'>
         {trending.map((post) => (
           <div key={post.id}>
             {/* Render Trending Post */}
+            <h2>Trending</h2>
             <h3>{post.title}</h3>
-            <p>{post.content}</p>
+            <p>{post.body}</p>
           </div>
         ))}
       </div>

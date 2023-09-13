@@ -2,3 +2,33 @@ div {
   background: #ffffff;
   padding: 20px;
 }
+
+// Container for the trending posts
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; // Adjust this to change the spacing between cards
+}
+
+// Style for each post card
+.container > div {
+  flex-basis: calc(
+    20% - 10px
+  ); // Set the width of each card with a margin between them
+  margin: 5px; // Adjust this for the desired margin
+  padding: 10px;
+  border: 1px solid #ccc; // Add a border for the card
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Add a shadow for a lifted effect
+
+  // Style for the post title
+  h3 {
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+  }
+
+  // Style for the post body
+  p {
+    font-size: 1em;
+    margin: 0;
+  }
+}
